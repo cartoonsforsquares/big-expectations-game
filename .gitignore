@@ -1,0 +1,17 @@
+.DS_Store
+.claude/
+
+# originals and working art stay on this computer
+Exports/
+Photos/
+Working Files/
+*.png
+*.psd
+*.jpg
+
+# drafts and old prototypes
+motion-draft/
+drafts/
+draft-*.html
+tools/checks/
+tools/make_pieces.py
