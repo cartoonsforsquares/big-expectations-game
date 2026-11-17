@@ -18,8 +18,9 @@ const PUNCH_GAP = 110, KICK_GAP = 420; //how soon she can attack again after eac
 const WHIFF_MS = 230;        //missing everything locks attacks this long
 const HURT_MS = 900;         //can't be hurt again for this long
 
-const SPAWN_START = 1500, SPAWN_MIN = 520, SPAWN_FASTER = 24;  //ms between dudes, shrinking per KO
-const SPEED_START = 58, SPEED_MAX = 150, SPEED_FASTER = 2.2;   //dude walking speed, px per second
+const SPAWN_START = 1150, SPAWN_MIN = 480, SPAWN_FASTER = 20;  //ms between dudes, shrinking per KO
+const SPEED_START = 125, SPEED_MAX = 230, SPEED_FASTER = 2.5;  //dude walking speed, px per second
+const SPAWN_OUT = 50;        //dudes start just this far past the edge of the phone frame
 const MAX_WALKERS = 4;
 
 const DUDE_PIECES = ['legL', 'legR', 'upper'];   //drawn back to front; only the legs move
@@ -157,7 +158,7 @@ function drawCharFrame(id, frame, x, y, s, flip) {
 function startGame(id) {
   player = { id, dir: 1, move: null, moveAt: 0, readyAt: 0, whiffUntil: 0, hurtAt: -9999 };
   dudes = []; bits = []; stickers = []; puffs = [];
-  hearts = HEARTS; kos = 0; lastSpawn = millis() - SPAWN_START + 600; newBest = false;
+  hearts = HEARTS; kos = 0; lastSpawn = millis() - SPAWN_START + 250;   //first dude right away newBest = false;
   best = loadBest(id);
   state = 'play';
 }
@@ -168,8 +169,8 @@ function spawnDudes() {
   if (millis() - lastSpawn < every || walkers >= MAX_WALKERS) return;
   lastSpawn = millis();
   const side = random() < 0.5 ? -1 : 1;
-  //off the edge of the window, so they walk in on wide screens too
-  const edge = side < 0 ? -ox / sc - 70 : VW + ox / sc + 70;
+  //just past the edge of the phone frame (not the whole window, which made wide screens a long walk)
+  const edge = side < 0 ? -SPAWN_OUT : VW + SPAWN_OUT;
   dudes.push({ side, x: edge, y: GROUND, mode: 'walk', step: random(TWO_PI),
     speed: min(SPEED_MAX, SPEED_START + kos * SPEED_FASTER) + random(-8, 8), stunUntil: 0,
     vx: 0, vy: 0, a: 0, spin: 0 });
